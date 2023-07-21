@@ -1,0 +1,10 @@
+Hello again {{ name }} !
+
+We are happy to have you on board !!!
+
+Please follow the link below to activate Your account!
+
+Link: {{client_url}}/activate-user/{{token}}/
+
+Yours best,
+Yoona.ai Team

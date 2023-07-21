@@ -1,0 +1,13 @@
+skips:
+  - '**/tests/*'
+  - '**/migrations/*'
+  - '**/media/*'
+  - '**/static/*'
+
+plugins:
+  blacklists:
+    - B101
+    - B404
+    - B603
+    - B607
+    - B608

@@ -1,0 +1,11 @@
+{% include "layout/header.html" %}
+<div id="content">
+	<p id="hello">Hello <strong>{{name}}</strong>, Welcome to the <span
+					style="color: #00cfff;"><strong>Yoona.ai</strong>.</span></p>
+	<p style="padding-bottom: 30px;">You're just one click away from verifying your account, please click the link
+		below to verify your email address.
+    </p>
+    <a href="{{client_url}}/verify-user/{{ token }}/"> Verify </a>
+	<p id="note">Note: If you don't recognize this email please ignore it, the account hasn't been created yet.</p>
+</div>
+{% include "layout/footer.html" %}

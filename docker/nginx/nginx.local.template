@@ -1,0 +1,66 @@
+log_format upstreamlog '[$time_local] $remote_addr - $remote_user - $server_name $host to: $upstream_addr: $request $status upstream_response_time $upstream_response_time msec $msec request_time $request_time';
+
+server {
+    listen         80;
+    server_name localhost;
+
+    client_max_body_size 50M;
+
+    resolver 127.0.0.11 valid=30s;
+
+
+    location /monitoring/ {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        set $monitoring grafana:3000;
+        proxy_pass http://$monitoring;
+    }
+
+    location /static/ {
+        alias /app/static/;
+    }
+
+    location /media/ {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Origin, X-Requested-With, Content-Type, Accept';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        alias /app/media/;
+    }
+
+
+
+    location /flower/ {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        set $flower flower:5555;
+        proxy_pass http://$flower;
+    }
+
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        set $api yoona:8000;
+        proxy_pass http://$api;
+    }
+}
+
+server {
+    listen 8888;
+        server_name localhost;
+        location /nginx_status {
+          stub_status;
+          allow 127.0.0.1;    #only allow requests from localhost
+    }
+}
+
+

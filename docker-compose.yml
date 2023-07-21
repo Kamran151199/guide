@@ -1,0 +1,112 @@
+version: '3.7'
+
+services:
+  database:
+    hostname: database
+    image: bitnami/postgresql:13
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  redis:
+    hostname: redis
+    image: bitnami/redis:latest
+    command: >
+      /opt/bitnami/scripts/redis/run.sh 
+      --appendonly no
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+
+  celery-worker:
+    hostname: celery-worker
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+      target: celery
+    env_file:
+      - .env
+    command: >
+      /bin/bash -c "celery -A 
+      core worker --loglevel 
+      ${CELERY_WORKER_LOGLEVEL}"
+    depends_on:
+      - database
+      - redis
+    volumes:
+      - ./src/:/app/
+      - staticfiles:/app/static
+      - mediafiles:/app/media
+
+  guide:
+    container_name: guide
+    hostname: guide
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+      target: api
+    env_file:
+      - .env
+    environment:
+      - SERVICE_VARIANT=api
+      - WSGI_NAME=wsgi
+    depends_on:
+      - database
+      - redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/:/app/
+      - staticfiles:/app/static
+      - mediafiles:/app/media
+
+  flower:
+    hostname: flower
+    image: mher/flower
+    env_file:
+      - .env
+    environment:
+      CELERY_WORKER_LOGLEVEL: INFO
+    command: >
+      celery --broker=redis://:${REDIS_PASSWORD}@${REDIS_HOST}:6379/0 
+      flower --port=5555 --loglevel 
+      ${CELERY_WORKER_LOGLEVEL} --url-prefix=flower
+    ports:
+      - "5555:5555"
+    depends_on:
+      - database
+      - guide
+      - redis
+      - celery-worker
+
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    build:
+      context: ./docker/nginx/
+      dockerfile: Dockerfile
+      target: local
+    command: >
+      /bin/bash -c 
+      "envsubst '$$PRODUCTION_HOST' < 
+      /etc/nginx/nginx.template > 
+      /etc/nginx/conf.d/default.conf && 
+      /bin/sh -c 'while :; do sleep 6h & 
+      wait $${!}; nginx -s reload; 
+      done & nginx -g \"daemon off;\"'"
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/nginx.local.template:/etc/nginx/nginx.template
+      - staticfiles:/app/static
+      - mediafiles:/app/media
+
+
+
+volumes:
+  staticfiles:
+  mediafiles:

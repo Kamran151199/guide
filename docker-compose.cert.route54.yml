@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  letsencrypt:
+    image: certbot/dns-route53
+    command: sh -c "certbot certonly -d kamranvalijonov.com -d *.kamranvalijonov.com --dns-route53 -m kamranvalijonov@gmail.com --agree-tos --non-interactive --server https://acme-v02.api.letsencrypt.org/directory --dns-route53-propagation-seconds 600"
+    entrypoint: ""
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    environment:
+      - TERM=xterm
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    ports:
+      - "80:80"
+
+volumes:
+  letsencrypt:
+    name: letsencrypt_keys
