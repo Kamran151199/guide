@@ -90,6 +90,13 @@ class User(AbstractUser):
         blank=True,
         max_length=15,
     )
+    country = models.OneToOneField(
+        "country.Country",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        verbose_name=_("Country"),
+    )
     created_at = models.DateTimeField(verbose_name=_("Date joined"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("Date updated"), blank=True,
                                       editable=False, auto_now=True)
@@ -155,3 +162,15 @@ class User(AbstractUser):
             self.is_active = True
             self.set_password(password)
             self.save()
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "phone_number": self.phone_number,
+            "is_active": self.is_active,
+            "is_verified": self.is_verified,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }

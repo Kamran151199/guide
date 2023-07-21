@@ -17,12 +17,22 @@ class UserSerializer(
             "is_active",
             "is_staff",
             "is_verified",
+            'country'
         )
         read_only_fields = (
             "is_staff",
             "is_verified",
+            'country',
+            "is_active",
             "id",
         )
+
+    def validate(self, attrs):
+        country = getattr(self.context.get('request', {}), 'tenant', None)
+        if not country:
+            raise serializers.ValidationError("Country not found")
+        attrs['country'] = country
+        return attrs
 
 
 class UserActivationSerializer(serializers.Serializer):

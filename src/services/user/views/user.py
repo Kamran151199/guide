@@ -38,6 +38,7 @@ class UserViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
 
     permission_classes = [ModelPermissions, DjangoObjectPermissions]
     permission_classes_by_action = {
+        "create": [AllowAny],
         "activate": [AllowAny],
         "resend_activation": [AllowAny],
         "reset_password": [AllowAny],

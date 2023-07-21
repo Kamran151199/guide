@@ -47,13 +47,13 @@ def make_security_email_payload(
         data = instance.to_dict()
         data["token"] = secret
         if intended_for == "user.User":
-            company = getattr(instance, "company", None)
-            if not company:
-                company = instance.invited_by.company
-            with tenant_context(company):
+            country = getattr(instance, "country", None)
+            if not country:
+                country = instance.country
+            with tenant_context(country):
                 client_url = settings.CLIENT_URL
                 client_subdomain = get_subdomain(
-                    company.domains.first().domain
+                    country.domains.first().domain
                 )
                 data["client_url"] = append_subdomain(client_url, client_subdomain)
         else:
