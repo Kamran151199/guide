@@ -1,4 +1,3 @@
-
 """
     Django settings for Guide v1 project.
 """
@@ -380,20 +379,6 @@ VALID_DOMAINS_REGEX = env.str_env(
     "[A-Za-z0-9][A-Za-z0-9\-]*"
     "[A-Za-z0-9])$",
 )
-
-
-# *******************************
-# *           RBAC              *
-# *******************************
-class RBACDefaultGroupsEnum(Enum):
-    Owner = "Owner"
-    Admin = "Admin"
-    Employee = "Employee"
-    Guest = "Guest"
-
-
-RBAC_DEFAULT_GROUPS = RBACDefaultGroupsEnum
-RBAC_DEFAULT_ROLES_MODULE = "services.rbac.roles"
 
 APP_DOMAIN = env.str_env("APP_DOMAIN", "http://localhost")
 

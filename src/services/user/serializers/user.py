@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from services.country.serializers.country import CountrySerializer
 from services.user.models.user import User
 from helpers.auth.custom_jwt import JWTAuth
 
@@ -8,8 +7,6 @@ from helpers.auth.custom_jwt import JWTAuth
 class UserSerializer(
     serializers.ModelSerializer
 ):
-    country = CountrySerializer(read_only=True)
-
     class Meta:
         model = User
         fields = (

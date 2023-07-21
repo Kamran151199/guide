@@ -82,7 +82,6 @@ services:
       - celery-worker
 
   nginx:
-    container_name: nginx
     hostname: nginx
     build:
       context: ./docker/nginx/

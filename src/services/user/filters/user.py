@@ -14,6 +14,4 @@ class UserFilterSet(FilterSet):
             "is_active": ["exact"],
             "is_verified": ["exact"],
             "is_staff": ["exact"],
-            "company__name": ["exact", "contains", "icontains"],
-            "groups": ["exact", "contains", "icontains"],
         }

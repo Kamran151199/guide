@@ -1,4 +1,6 @@
 from abc import ABC
+
+from django.db import transaction
 from rest_framework import serializers
 
 from services.country.models.country import Country
@@ -19,7 +21,7 @@ class CountrySerializer(serializers.ModelSerializer):
     """
 
     # One country can have up to 3 domains
-    primary_domain = serializers.CharField(max_length=200)
+    primary_domain = serializers.CharField(max_length=200, write_only=True)
 
     class Meta:
         """
@@ -44,6 +46,7 @@ class CountrySerializer(serializers.ModelSerializer):
         """
         validated_data["schema_name"] = validated_data["name"]
         primary_domain = validated_data.pop("primary_domain")
-        country = Country.objects.create(**validated_data)
-        country.set_primary_domain(primary_domain)
+        with transaction.atomic():
+            country = Country.objects.create(**validated_data)
+            country.set_primary_domain(primary_domain)
         return country

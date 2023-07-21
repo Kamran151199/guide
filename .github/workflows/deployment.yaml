@@ -1,9 +1,11 @@
 name: Guide Deployment
 on:
-  workflow_run:
-    workflows: [ "Testing with Pytest" ]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -18,4 +20,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          script: cd yoona-v1 && git pull origin master && make stop-prod && make run-prod
+          script: cd guide && git pull origin master && make stop-prod && make run-prod

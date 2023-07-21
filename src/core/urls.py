@@ -19,8 +19,8 @@ urlpatterns = [
 
     # custom
     path("users/", include("services.user.urls.user")),
-    path("countries/", include("services.organization.urls.company")),
-    path("countries/", include("services.organization.urls.domain")),
+    path("countries/", include("services.country.urls.country")),
+    path("countries/", include("services.country.urls.domain")),
 
     # prometheus
     path("", include("django_prometheus.urls")),

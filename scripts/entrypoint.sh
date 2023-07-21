@@ -7,7 +7,7 @@ echo "Waiting for database to be ready..."
   /wait.sh -t 10 -h ${REDIS_HOST} -p ${REDIS_PORT} -- echo "redis is up" &&
   echo "Starting migrations..."
 
-python manage.py makemigrations --noinput
-python manage.py migrate --noinput
+#python manage.py makemigrations --noinput
+#python manage.py migrate --noinput
 
 exec "$@"

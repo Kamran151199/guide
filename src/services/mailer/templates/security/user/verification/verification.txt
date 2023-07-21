@@ -7,4 +7,4 @@ Please follow the link below to verify Your account!
 Link: {{client_url}}/verify-user/{{token}}/
 
 Yours best,
-Yoona.ai Team
+Guide Team
