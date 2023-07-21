@@ -2,15 +2,15 @@ version: '3.7'
 
 services:
   letsencrypt:
-    image: certbot/certbot:latest
-    command: sh -c "certbot certonly --standalone -d ${PRODUCTION_HOST} --text --agree-tos --email valijonov.kamran@accelclub.pro --server https://acme-v02.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges=http"
-    env_file:
-      - .env
+    image: certbot/dns-route53
+    command: sh -c "certbot certonly -d kamranvalijonov.com -d *.code.kamranvalijonov.com --dns-route53 -m kamran.valijonov@yoona.ai --agree-tos --non-interactive --server https://acme-v02.api.letsencrypt.org/directory --dns-route53-propagation-seconds 600"
     entrypoint: ""
     volumes:
       - letsencrypt:/etc/letsencrypt
     environment:
       - TERM=xterm
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     ports:
       - "80:80"
 
