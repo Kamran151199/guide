@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  letsencrypt:
+    image: certbot/certbot:latest
+    command: sh -c "certbot certonly --standalone -d ${PRODUCTION_HOST} --text --agree-tos --email valijonov.kamran@accelclub.pro --server https://acme-v02.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges=http"
+    env_file:
+      - .env
+    entrypoint: ""
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    environment:
+      - TERM=xterm
+    ports:
+      - "80:80"
+
+volumes:
+  letsencrypt:
+    name: letsencrypt_keys

@@ -1,3 +1,5 @@
+include .env
+
 run:
 	docker-compose -f  docker-compose.yml up
 run-build:
